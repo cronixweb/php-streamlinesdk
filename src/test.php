@@ -55,22 +55,3 @@ try {
 } catch (\Throwable $e) {
     echo "Booked dates error: " . $e->getMessage() . "\n";
 }
-
-// 6) Pre-reservation price
-try {
-    $price = $api->preReservationPrice()->getPreReservationPrice(
-        unitId: $unitId,
-        startdate: '01/10/2020',
-        enddate: '01/17/2020',
-        occupants: 2,
-        occupantsSmall: 2,
-        pets: 1,
-        includeCouponInformation: true,
-        separateTaxes: true,
-        showDueToday: true
-    );
-    echo "Pre-Reservation Price:\n";
-    print_r($price);
-} catch (\Throwable $e) {
-    echo "Pre-res price error: " . $e->getMessage() . "\n";
-}

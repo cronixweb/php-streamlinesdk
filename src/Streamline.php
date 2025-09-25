@@ -3,10 +3,8 @@
 namespace Cronixweb\Streamline;
 
 use Cronixweb\Streamline\Utils\AmenitiesClient;
-use Cronixweb\Streamline\Utils\BlockedDaysClient;
 use Cronixweb\Streamline\Utils\BookedDaysClient;
 use Cronixweb\Streamline\Utils\GalleryImagesClient;
-use Cronixweb\Streamline\Utils\PreReservationPriceClient;
 use Cronixweb\Streamline\Utils\PropertiesClient;
 use Cronixweb\Streamline\Utils\PropertyRatesClient;
 use Cronixweb\Streamline\Utils\ReviewsClient;
