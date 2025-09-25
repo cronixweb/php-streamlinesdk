@@ -22,7 +22,7 @@ try {
 
 // 2) Amenities for the property
 try {
-    $amenities = $api->amenities()->getPropertyAmenities($unitId);
+    $amenities = $api->properties($unitId)->amenities()->all();
     echo "Amenities:\n";
     print_r($amenities);
 } catch (\Throwable $e) {

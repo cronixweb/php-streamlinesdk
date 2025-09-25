@@ -38,9 +38,7 @@ class ModelClient
      */
     public function all(): array
     {
-        $data = $this->client->request($this->findAllMethod, [
-            $this->primaryKey => 0,
-        ]);
+        $data = $this->client->request($this->findAllMethod,[]);
 
         $properties = [];
 
