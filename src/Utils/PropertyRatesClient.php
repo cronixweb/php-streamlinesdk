@@ -1,0 +1,135 @@
+<?php
+
+namespace Cronixweb\Streamline\Utils;
+
+use Cronixweb\Streamline\Exceptions\StreamlineApiException;
+use Cronixweb\Streamline\Models\PropertyRate;
+use Cronixweb\Streamline\Traits\ModelClient;
+use Illuminate\Http\Client\ConnectionException;
+
+class PropertyRatesClient extends ModelClient
+{
+    protected string $modelName = PropertyRate::class;
+    protected string $primaryKey = 'unit_id';
+    protected string $findOneMethod = 'GetPropertyRates';
+    protected string $findAllMethod = '';
+
+    public function __construct(private readonly StreamlineClient $client)
+    {
+        parent::__construct($client);
+    }
+
+    /**
+     * Fetch property rates for a given unit and date range.
+     *
+     * @param int $unitId
+     * @param string $startdate MM/DD/YYYY
+     * @param string $enddate MM/DD/YYYY
+     * @param bool|null $useRoomTypeLogic
+     * @param bool|null $dailyChangeOver
+     * @param bool|null $useHomeawayMaxDaysNotice
+     * @param int[]|null $rateTypeIds
+     * @param bool|null $showLosIfEnabled
+     * @param int|null $maxLosStay 1-180, requires show_los_if_enabled=true
+     * @param bool|null $useAdvLogicIfDefined
+     * @return PropertyRate[]
+     * @throws StreamlineApiException
+     * @throws ConnectionException
+     */
+    public function getPropertyRates(
+        int $unitId,
+        string $startdate,
+        string $enddate,
+        ?bool $useRoomTypeLogic = null,
+        ?bool $dailyChangeOver = null,
+        ?bool $useHomeawayMaxDaysNotice = null,
+        ?array $rateTypeIds = null,
+        ?bool $showLosIfEnabled = null,
+        ?int $maxLosStay = null,
+        ?bool $useAdvLogicIfDefined = null,
+    ): array {
+        if ($unitId <= 0) {
+            throw new \InvalidArgumentException('unit_id must be a positive integer');
+        }
+        if (!self::isValidDate($startdate) || !self::isValidDate($enddate)) {
+            throw new \InvalidArgumentException('startdate and enddate must be in MM/DD/YYYY format');
+        }
+        if ($dailyChangeOver && $useHomeawayMaxDaysNotice) {
+            throw new \InvalidArgumentException('dailyChangeOver and use_homeaway_max_days_notice cannot be used together');
+        }
+        if ($maxLosStay !== null) {
+            if ($maxLosStay < 1 || $maxLosStay > 180) {
+                throw new \InvalidArgumentException('max_los_stay must be between 1 and 180');
+            }
+            if (!$showLosIfEnabled) {
+                throw new \InvalidArgumentException('max_los_stay requires show_los_if_enabled=true');
+            }
+        }
+
+        $params = [
+            'unit_id' => $unitId,
+            'startdate' => $startdate,
+            'enddate' => $enddate,
+        ];
+
+        $boolFlag = fn(?bool $v) => $v === null ? null : ($v ? 1 : 0);
+        $flags = [
+            'use_room_type_logic' => $boolFlag($useRoomTypeLogic),
+            'dailyChangeOver' => $boolFlag($dailyChangeOver),
+            'use_homeaway_max_days_notice' => $boolFlag($useHomeawayMaxDaysNotice),
+            'show_los_if_enabled' => $boolFlag($showLosIfEnabled),
+            'use_adv_logic_if_defined' => $boolFlag($useAdvLogicIfDefined),
+        ];
+        foreach ($flags as $k => $v) {
+            if ($v !== null) { $params[$k] = $v; }
+        }
+
+        if ($maxLosStay !== null) { $params['max_los_stay'] = $maxLosStay; }
+
+        if ($rateTypeIds !== null && is_array($rateTypeIds) && !empty($rateTypeIds)) {
+            // Best-effort structure based on docs; API often accepts { rate_types: { id: [..] } }
+            $ids = [];
+            foreach ($rateTypeIds as $id) {
+                if (is_int($id) && $id > 0) { $ids[] = $id; }
+            }
+            if (!empty($ids)) {
+                $params['rate_types'] = ['id' => $ids];
+            }
+        }
+
+        $data = $this->client->request('GetPropertyRates', $params);
+
+        // Response can be multiple <data> nodes; $data may be a list or single assoc
+        $items = [];
+        if (is_array($data)) {
+            if ($this->isAssoc($data)) {
+                // Single row
+                $items = [$data];
+            } else {
+                // List of rows
+                $items = $data;
+            }
+        }
+
+        $result = [];
+        foreach ($items as $item) {
+            // Some implementations wrap fields inside a 'data' key; handle defensively
+            if (isset($item['season']) || isset($item['date'])) {
+                $result[] = PropertyRate::parse($item);
+            } elseif (isset($item['data']) && is_array($item['data'])) {
+                $result[] = PropertyRate::parse($item['data']);
+            }
+        }
+        return $result;
+    }
+
+    private static function isValidDate(string $date): bool
+    {
+        return (bool)preg_match('/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/', $date);
+    }
+
+    private function isAssoc(array $arr): bool
+    {
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+}

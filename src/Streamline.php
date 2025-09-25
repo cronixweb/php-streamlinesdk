@@ -8,6 +8,7 @@ use Cronixweb\Streamline\Utils\BookedDaysClient;
 use Cronixweb\Streamline\Utils\GalleryImagesClient;
 use Cronixweb\Streamline\Utils\PreReservationPriceClient;
 use Cronixweb\Streamline\Utils\PropertiesClient;
+use Cronixweb\Streamline\Utils\PropertyRatesClient;
 use Cronixweb\Streamline\Utils\ReviewsClient;
 use Cronixweb\Streamline\Utils\StreamlineClient;
 
@@ -73,5 +74,10 @@ class Streamline
     public function preReservationPrice(): PreReservationPriceClient
     {
         return new PreReservationPriceClient($this->client);
+    }
+
+    public function propertyRates(): PropertyRatesClient
+    {
+        return new PropertyRatesClient($this->client);
     }
 }
