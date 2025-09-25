@@ -7,12 +7,12 @@ use Cronixweb\Streamline\Traits\StreamlineModel;
 class PropertyRate extends StreamlineModel
 {
     public function __construct(
-        public readonly ?string $season = null,
-        public readonly ?string $date = null, // YYYY-MM-DD per example
-        public readonly ?float $rate = null,
-        public readonly ?int $minStay = null,
-        public readonly ?int $booked = null,
-        public readonly ?string $changeOver = null,
+        public readonly ?string $season = '',
+        public readonly ?string $date = '', // YYYY-MM-DD per example
+        public readonly ?float $rate = 0,
+        public readonly ?int $minStay = 0,
+        public readonly ?int $booked = 0,
+        public readonly ?string $changeOver = '',
     ) {}
 
     public static function parse(array $data): PropertyRate
@@ -27,12 +27,12 @@ class PropertyRate extends StreamlineModel
         };
 
         return new PropertyRate(
-            season: $data['season'] ?? null,
-            date: $data['date'] ?? null,
-            rate: $toFloat($data['rate'] ?? null),
-            minStay: $toInt($data['minStay'] ?? null),
-            booked: $toInt($data['booked'] ?? null),
-            changeOver: $data['changeOver'] ?? null,
+            season: $data['season'] ?? '',
+            date: $data['date'] ?? '',
+            rate: $toFloat($data['rate'] ?? ''),
+            minStay: $toInt($data['minStay'] ?? ''),
+            booked: $toInt($data['booked'] ?? ''),
+            changeOver: $data['changeOver'] ?? '',
         );
     }
 }
