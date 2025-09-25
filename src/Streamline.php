@@ -71,11 +71,6 @@ class Streamline
         return new BookedDaysClient($this->client);
     }
 
-    public function preReservationPrice(): PreReservationPriceClient
-    {
-        return new PreReservationPriceClient($this->client);
-    }
-
     public function propertyRates(): PropertyRatesClient
     {
         return new PropertyRatesClient($this->client);

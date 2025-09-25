@@ -74,22 +74,3 @@ try {
 } catch (\Throwable $e) {
     echo "Pre-res price error: " . $e->getMessage() . "\n";
 }
-
-// 7) Property daily rates
-try {
-    $rates = $api->propertyRates()->getPropertyRates(
-        unitId: $unitId,
-        startdate: '02/15/2020',
-        enddate: '02/27/2020',
-        dailyChangeOver: true,
-        useHomeawayMaxDaysNotice: false,
-        rateTypeIds: [429876],
-        showLosIfEnabled: true,
-        maxLosStay: 90,
-        useAdvLogicIfDefined: true,
-    );
-    echo "Property Rates (daily):\n";
-    print_r($rates);
-} catch (\Throwable $e) {
-    echo "Property rates error: " . $e->getMessage() . "\n";
-}
