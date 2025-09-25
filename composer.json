@@ -1,0 +1,19 @@
+{
+    "name": "cronixweb/streamline-sdk",
+    "description": "PHP based SDK to access stramlinevrs.com apis",
+    "type": "library",
+    "require": {
+        "illuminate/http": "^12.31"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cronixweb\\StreamlineSdk\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "cronixweb"
+        }
+    ],
+    "minimum-stability": "stable"
+}
