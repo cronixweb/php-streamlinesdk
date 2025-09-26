@@ -22,4 +22,9 @@ class PropertiesClient extends ModelClient
         return AmenitiesClient::for($this, $unitId);
     }
 
+    public function galleryImages(int $unitId): GalleryImagesClient
+    {
+        return GalleryImagesClient::for($this, $unitId);
+    }
+
 }
