@@ -31,7 +31,7 @@ try {
 
 // 3) Guest reviews (surveys)
 try {
-    $reviews = $api->reviews()->getGuestReviews(unitId: $unitId, returnAll: true);
+    $reviews = $api->properties()->reviews(23432)->all();
     echo "Reviews:\n";
     print_r($reviews);
 } catch (\Throwable $e) {

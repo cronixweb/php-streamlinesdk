@@ -14,10 +14,27 @@ class ReviewsClient extends ModelClient
     protected string $findOneMethod = '';
     protected string $findAllMethod = 'GetGuestReviews';
 
-    public function __construct(private readonly StreamlineClient $client)
+    public function __construct(private readonly StreamlineClient $client,private readonly int $unitId = 0)
     {
         parent::__construct($client);
     }
+
+    public static function for(PropertiesClient $client,int $unitId){
+        return new self($client->client(),$unitId);
+    }
+
+    public function all($body = []): array
+    {
+        if($this->unitId >= 0){
+            return parent::all([
+                'unit_id' => $this->unitId,
+                ...$body,
+            ]);
+        }
+
+        return parent::all($body);
+    }
+
 
     /**
      * Fetch guest reviews (surveys) filtered by optional parameters.

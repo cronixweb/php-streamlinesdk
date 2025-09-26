@@ -12,8 +12,9 @@ class PropertiesClient extends ModelClient
     protected string $findOneMethod = "GetPropertyInfo";
     protected string $findAllMethod = "GetPropertyList";
 
-    public function reviews(){
-        return new ReviewsClient()
+    public function reviews(int $unitId): ReviewsClient
+    {
+        return ReviewsClient::for($this,$unitId);
     }
 
 }

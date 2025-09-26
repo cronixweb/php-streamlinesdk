@@ -31,14 +31,19 @@ class ModelClient
 
     }
 
+    public function client(): StreamlineClient
+    {
+        return $this->client;
+    }
+
     /**
      * @return StreamlineModel[]
      * @throws StreamlineApiException
      * @throws ConnectionException
      */
-    public function all(): array
+    public function all($body = []): array
     {
-        $data = $this->client->request($this->findAllMethod,[]);
+        $data = $this->client->request($this->findAllMethod,$body);
 
         $properties = [];
 
