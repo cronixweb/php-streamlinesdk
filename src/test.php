@@ -49,7 +49,7 @@ try {
 
 // 5) Booked/Blocked dates
 try {
-    $booked = $api->bookedDates()->getBlockedDaysForUnit($unitId, startdate: '12/05/2019', displayB2BBlocks: true);
+    $booked = $api->properties($unitId)->propertyRates(23432)->all(['startDate' => '12/05/2019', 'endDate' => '12/05/2020']);
     echo "Booked/Blocked Dates:\n";
     print_r($booked);
 } catch (Throwable $e) {

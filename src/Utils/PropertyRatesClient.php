@@ -34,10 +34,10 @@ class PropertyRatesClient extends ModelClient
             throw new InvalidArgumentException('unit_id is required and must be a positive integer');
         }
 
-        $startdate = $body['startdate'] ?? null;
-        $enddate = $body['enddate'] ?? null;
-        if (!$startdate || !$enddate) {
-            throw new InvalidArgumentException('startdate and enddate are required (MM/DD/YYYY)');
+        $startDate = $body['startDate'] ?? null;
+        $endDate = $body['endDate'] ?? null;
+        if (!$startDate || !$endDate) {
+            throw new InvalidArgumentException('startDate and endDate are required (MM/DD/YYYY)');
         }
 
         // Map optional flags and inputs (all optional)
@@ -52,8 +52,8 @@ class PropertyRatesClient extends ModelClient
 
         return $this->getPropertyRates(
             $unitId,
-            $startdate,
-            $enddate,
+            $startDate,
+            $endDate,
             $useRoomTypeLogic,
             $dailyChangeOver,
             $useHomeawayMaxDaysNotice,
@@ -68,8 +68,8 @@ class PropertyRatesClient extends ModelClient
      * Fetch property rates for a given unit and date range.
      *
      * @param int $unitId
-     * @param string $startdate MM/DD/YYYY
-     * @param string $enddate MM/DD/YYYY
+     * @param string $startDate MM/DD/YYYY
+     * @param string $endDate MM/DD/YYYY
      * @param bool|null $useRoomTypeLogic
      * @param bool|null $dailyChangeOver
      * @param bool|null $useHomeawayMaxDaysNotice
@@ -83,8 +83,8 @@ class PropertyRatesClient extends ModelClient
      */
     public function getPropertyRates(
         int    $unitId,
-        string $startdate,
-        string $enddate,
+        string $startDate,
+        string $endDate,
         ?bool  $useRoomTypeLogic = null,
         ?bool  $dailyChangeOver = null,
         ?bool  $useHomeawayMaxDaysNotice = null,
@@ -97,7 +97,7 @@ class PropertyRatesClient extends ModelClient
         if ($unitId <= 0) {
             throw new InvalidArgumentException('unit_id must be a positive integer');
         }
-        if (!self::isValidDate($startdate) || !self::isValidDate($enddate)) {
+        if (!self::isValidDate($startDate) || !self::isValidDate($endDate)) {
             throw new InvalidArgumentException('startdate and enddate must be in MM/DD/YYYY format');
         }
         if ($dailyChangeOver && $useHomeawayMaxDaysNotice) {
@@ -114,8 +114,8 @@ class PropertyRatesClient extends ModelClient
 
         $params = [
             'unit_id' => $unitId,
-            'startdate' => $startdate,
-            'enddate' => $enddate,
+            'startdate' => $startDate,
+            'enddate' => $endDate,
         ];
 
         $boolFlag = fn(?bool $v) => $v === null ? null : ($v ? 1 : 0);
