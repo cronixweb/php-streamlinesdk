@@ -22,7 +22,7 @@ try {
 
 // 2) Amenities for the property
 try {
-    $amenities = $api->properties($unitId)->amenities()->all();
+    $amenities = $api->properties($unitId)->amenities(23432)->all();
     echo "Amenities:\n";
     print_r($amenities);
 } catch (Throwable $e) {
@@ -40,7 +40,7 @@ try {
 
 // 4) Gallery images
 try {
-    $images = $api->galleryImages()->getPropertyGalleryImages($unitId);
+    $images = $api->properties($unitId)->galleryImages(23432)->all();
     echo "Gallery Images:\n";
     print_r($images);
 } catch (Throwable $e) {

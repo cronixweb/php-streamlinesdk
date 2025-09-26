@@ -12,8 +12,8 @@ class AmenitiesClient extends ModelClient
 {
     protected string $modelName = Amenity::class;
     protected string $primaryKey = 'amenity_id';
-    protected string $findOneMethod = 'GetPropertyAmenities';
-    protected string $findAllMethod = 'GetAmenities';
+    protected string $findOneMethod = '';
+    protected string $findAllMethod = 'GetPropertyAmenities';
 
     public function __construct(private readonly StreamlineClient $client, private readonly int $unitId = 0)
     {
