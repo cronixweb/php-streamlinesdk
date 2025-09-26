@@ -27,4 +27,9 @@ class PropertiesClient extends ModelClient
         return GalleryImagesClient::for($this, $unitId);
     }
 
+    public function propertyRates(int $unitId): PropertyRatesClient
+    {
+        return PropertyRatesClient::for($this, $unitId);
+    }
+
 }

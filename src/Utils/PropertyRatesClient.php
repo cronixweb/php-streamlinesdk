@@ -12,12 +12,56 @@ class PropertyRatesClient extends ModelClient
 {
     protected string $modelName = PropertyRate::class;
     protected string $primaryKey = 'unit_id';
-    protected string $findOneMethod = 'GetPropertyRates';
-    protected string $findAllMethod = '';
+    protected string $findOneMethod = '';
+    protected string $findAllMethod = 'GetPropertyRates';
 
-    public function __construct(private readonly StreamlineClient $client)
+    public function __construct(private readonly StreamlineClient $client, private readonly int $unitId = 0)
     {
         parent::__construct($client);
+    }
+
+    public static function for(PropertiesClient $client, int $unitId): self
+    {
+        return new self($client->client(), $unitId);
+    }
+
+    public function all($body = []): array
+    {
+        // unit_id can come from the scoped PropertiesClient->propertyRates($unitId)
+        // or be provided directly in the body when using Streamline::propertyRates()
+        $unitId = $this->unitId > 0 ? $this->unitId : ($body['unit_id'] ?? 0);
+        if ($unitId <= 0) {
+            throw new InvalidArgumentException('unit_id is required and must be a positive integer');
+        }
+
+        $startdate = $body['startdate'] ?? null;
+        $enddate = $body['enddate'] ?? null;
+        if (!$startdate || !$enddate) {
+            throw new InvalidArgumentException('startdate and enddate are required (MM/DD/YYYY)');
+        }
+
+        // Map optional flags and inputs (all optional)
+        $useRoomTypeLogic = $body['use_room_type_logic'] ?? null;
+        $dailyChangeOver = $body['dailyChangeOver'] ?? null;
+        $useHomeawayMaxDaysNotice = $body['use_homeaway_max_days_notice'] ?? null;
+        // Accept either rate_types => [id => [..]] or a flat rate_type_ids => [..]
+        $rateTypeIds = $body['rate_types']['id'] ?? ($body['rate_type_ids'] ?? null);
+        $showLosIfEnabled = $body['show_los_if_enabled'] ?? null;
+        $maxLosStay = $body['max_los_stay'] ?? null;
+        $useAdvLogicIfDefined = $body['use_adv_logic_if_defined'] ?? null;
+
+        return $this->getPropertyRates(
+            $unitId,
+            $startdate,
+            $enddate,
+            $useRoomTypeLogic,
+            $dailyChangeOver,
+            $useHomeawayMaxDaysNotice,
+            $rateTypeIds,
+            $showLosIfEnabled,
+            $maxLosStay,
+            $useAdvLogicIfDefined,
+        );
     }
 
     /**
