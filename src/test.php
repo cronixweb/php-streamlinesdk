@@ -16,7 +16,7 @@ try {
     $property = $api->properties()->find($unitId);
     echo "Property info:\n";
     print_r($property);
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     echo "Property error: " . $e->getMessage() . "\n";
 }
 
@@ -25,7 +25,7 @@ try {
     $amenities = $api->properties($unitId)->amenities()->all();
     echo "Amenities:\n";
     print_r($amenities);
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     echo "Amenities error: " . $e->getMessage() . "\n";
 }
 
@@ -34,7 +34,7 @@ try {
     $reviews = $api->properties()->reviews(23432)->all();
     echo "Reviews:\n";
     print_r($reviews);
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     echo "Reviews error: " . $e->getMessage() . "\n";
 }
 
@@ -43,7 +43,7 @@ try {
     $images = $api->galleryImages()->getPropertyGalleryImages($unitId);
     echo "Gallery Images:\n";
     print_r($images);
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     echo "Gallery images error: " . $e->getMessage() . "\n";
 }
 
@@ -52,6 +52,6 @@ try {
     $booked = $api->bookedDates()->getBlockedDaysForUnit($unitId, startdate: '12/05/2019', displayB2BBlocks: true);
     echo "Booked/Blocked Dates:\n";
     print_r($booked);
-} catch (\Throwable $e) {
+} catch (Throwable $e) {
     echo "Booked dates error: " . $e->getMessage() . "\n";
 }

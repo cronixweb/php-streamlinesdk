@@ -6,6 +6,7 @@ use Cronixweb\Streamline\Exceptions\StreamlineApiException;
 use Cronixweb\Streamline\Models\BookedDate;
 use Cronixweb\Streamline\Traits\ModelClient;
 use Illuminate\Http\Client\ConnectionException;
+use InvalidArgumentException;
 
 class BookedDaysClient extends ModelClient
 {
@@ -37,19 +38,21 @@ class BookedDaysClient extends ModelClient
         // Normalize unit ids
         $unitIds = is_array($unitId) ? $unitId : [$unitId];
         if (empty($unitIds)) {
-            throw new \InvalidArgumentException('unit_id must be provided');
+            throw new InvalidArgumentException('unit_id must be provided');
         }
         foreach ($unitIds as $id) {
             if (!is_int($id) || $id <= 0) {
-                throw new \InvalidArgumentException('unit_id values must be positive integers');
+                throw new InvalidArgumentException('unit_id values must be positive integers');
             }
         }
 
         // Validate dates (basic MM/DD/YYYY check)
         $validateDate = function (?string $date, string $name) {
-            if ($date === null) { return; }
+            if ($date === null) {
+                return;
+            }
             if (!preg_match('/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/', $date)) {
-                throw new \InvalidArgumentException($name . ' must be in MM/DD/YYYY format');
+                throw new InvalidArgumentException($name . ' must be in MM/DD/YYYY format');
             }
         };
         $validateDate($startdate, 'startdate');
@@ -57,16 +60,26 @@ class BookedDaysClient extends ModelClient
 
         // If multiple units, enddate is mandatory per docs
         if (count($unitIds) > 1 && $enddate === null) {
-            throw new \InvalidArgumentException('enddate is required when requesting multiple unit_ids');
+            throw new InvalidArgumentException('enddate is required when requesting multiple unit_ids');
         }
 
         $params = [];
         $params['unit_id'] = count($unitIds) > 1 ? implode(',', $unitIds) : $unitIds[0];
-        if ($startdate !== null) { $params['startdate'] = $startdate; }
-        if ($enddate !== null) { $params['enddate'] = $enddate; }
-        if ($displayB2BBlocks !== null) { $params['display_b2b_blocks'] = $displayB2BBlocks ? 1 : 0; }
-        if ($allowInvalid !== null) { $params['allow_invalid'] = $allowInvalid ? 1 : 0; }
-        if ($owningId !== null && count($unitIds) === 1) { $params['owning_id'] = $owningId; }
+        if ($startdate !== null) {
+            $params['startdate'] = $startdate;
+        }
+        if ($enddate !== null) {
+            $params['enddate'] = $enddate;
+        }
+        if ($displayB2BBlocks !== null) {
+            $params['display_b2b_blocks'] = $displayB2BBlocks ? 1 : 0;
+        }
+        if ($allowInvalid !== null) {
+            $params['allow_invalid'] = $allowInvalid ? 1 : 0;
+        }
+        if ($owningId !== null && count($unitIds) === 1) {
+            $params['owning_id'] = $owningId;
+        }
 
         $data = $this->client->request('GetBlockedDaysForUnit', $params);
 

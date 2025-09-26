@@ -14,7 +14,12 @@ class PropertiesClient extends ModelClient
 
     public function reviews(int $unitId): ReviewsClient
     {
-        return ReviewsClient::for($this,$unitId);
+        return ReviewsClient::for($this, $unitId);
+    }
+
+    public function amenities(int $unitId): AmenitiesClient
+    {
+        return AmenitiesClient::for($this, $unitId);
     }
 
 }

@@ -7,58 +7,58 @@ use Cronixweb\Streamline\Traits\StreamlineModel;
 class Property extends StreamlineModel
 {
     public function __construct(
-        public readonly ?int $id = 0,
-        public readonly ?int $parent_id = 0,
-        public readonly ?int $search_position = 0,
+        public readonly ?int    $id = 0,
+        public readonly ?int    $parent_id = 0,
+        public readonly ?int    $search_position = 0,
         public readonly ?string $local_phone = '',
         public readonly ?string $wifi_security_key = '',
-        public readonly ?int $type_id = 0,
+        public readonly ?int    $type_id = 0,
         public readonly ?string $seo_title = '',
         public readonly ?string $seo_description = '',
         public readonly ?string $seo_keywords = '',
         public readonly ?string $addition_seo_text = '',
         public readonly ?string $mobile_seo_text = '',
-        public readonly ?int $use_parent_different_owners_logic = 0,
+        public readonly ?int    $use_parent_different_owners_logic = 0,
         public readonly ?string $floor = '',
-        public readonly ?int $sale_enabled = 0,
-        public readonly ?int $coupons_enabled = 0,
-        public readonly ?int $discounts_enabled = 0,
-        public readonly ?int $longterm_enabled = 0,
-        public readonly ?int $shortterm_enabled = 0,
-        public readonly ?int $location_id = 0,
-        public readonly ?int $building_id = 0,
-        public readonly ?int $condo_type_id = 0,
+        public readonly ?int    $sale_enabled = 0,
+        public readonly ?int    $coupons_enabled = 0,
+        public readonly ?int    $discounts_enabled = 0,
+        public readonly ?int    $longterm_enabled = 0,
+        public readonly ?int    $shortterm_enabled = 0,
+        public readonly ?int    $location_id = 0,
+        public readonly ?int    $building_id = 0,
+        public readonly ?int    $condo_type_id = 0,
         public readonly ?string $name = '',
         public readonly ?string $gallery_code = '',
-        public readonly ?int $status_id = 0,
+        public readonly ?int    $status_id = 0,
         public readonly ?string $image_ext = '',
         public readonly ?string $thumbnail_ext = '',
         public readonly ?string $unit_code = '',
-        public readonly ?int $max_adults = 0,
-        public readonly ?int $max_occupants = 0,
-        public readonly ?int $max_pets = 0,
+        public readonly ?int    $max_adults = 0,
+        public readonly ?int    $max_occupants = 0,
+        public readonly ?int    $max_pets = 0,
         public readonly ?string $virtual_tour_iframe_src = '',
         public readonly ?string $virtual_tour_iframe_style = '',
         public readonly ?string $virtual_tour_image_overlay_url = '',
         public readonly ?string $google_map_overlay_url = '',
-        public readonly ?float $latitude = 0,
-        public readonly ?float $longitude = 0,
+        public readonly ?float  $latitude = 0,
+        public readonly ?float  $longitude = 0,
         public readonly ?string $comment = '',
-        public readonly ?int $housekeeping_processor_id = 0,
-        public readonly ?float $location_latitude = 0,
-        public readonly ?float $location_longitude = 0,
-        public readonly ?int $square_foots = 0,
+        public readonly ?int    $housekeeping_processor_id = 0,
+        public readonly ?float  $location_latitude = 0,
+        public readonly ?float  $location_longitude = 0,
+        public readonly ?int    $square_foots = 0,
         public readonly ?string $floor_plan_iframe_src = '',
         public readonly ?string $floor_plan_iframe_style = '',
         public readonly ?string $web_name = '',
         public readonly ?string $status_name = '',
         public readonly ?string $location_name = '',
-        public readonly ?int $company_id = 0,
-        public readonly ?int $lodging_type_id = 0,
-        public readonly ?int $location_area_id = 0,
-        public readonly ?int $neighborhood_area_id = 0,
-        public readonly ?int $resort_area_id = 0,
-        public readonly ?int $home_type_id = 0,
+        public readonly ?int    $company_id = 0,
+        public readonly ?int    $lodging_type_id = 0,
+        public readonly ?int    $location_area_id = 0,
+        public readonly ?int    $neighborhood_area_id = 0,
+        public readonly ?int    $resort_area_id = 0,
+        public readonly ?int    $home_type_id = 0,
         public readonly ?string $address = '',
         public readonly ?string $city = '',
         public readonly ?string $zip = '',
@@ -71,36 +71,36 @@ class Property extends StreamlineModel
         public readonly ?string $short_description = '',
         public readonly ?string $location_image_ext = '',
         public readonly ?string $condo_type_name = '',
-        public readonly ?int $default_unit_id = 0,
-        public readonly ?int $condo_type_group_id = 0,
-        public readonly ?float $bathrooms_number = 0,
-        public readonly ?int $bedrooms_number = 0,
+        public readonly ?int    $default_unit_id = 0,
+        public readonly ?int    $condo_type_group_id = 0,
+        public readonly ?float  $bathrooms_number = 0,
+        public readonly ?int    $bedrooms_number = 0,
         public readonly ?string $condo_type_group_name = '',
         public readonly ?string $building_short_name = '',
         public readonly ?string $building_name = '',
-        public readonly ?int $images_number = 0,
-        public readonly ?int $owning_type_id = 0,
+        public readonly ?int    $images_number = 0,
+        public readonly ?int    $owning_type_id = 0,
         public readonly ?string $seo_page_name = '',
         public readonly ?string $view_name = '',
-        public readonly ?int $view_order = 0,
-        public readonly ?int $rating_count = 0,
-        public readonly ?float $rating_average = 0,
+        public readonly ?int    $view_order = 0,
+        public readonly ?int    $rating_count = 0,
+        public readonly ?float  $rating_average = 0,
         public readonly ?string $flyer_url = '',
-        public readonly ?int $owning_result_table_order = 0,
+        public readonly ?int    $owning_result_table_order = 0,
         public readonly ?string $property_rating_name = '',
-        public readonly ?float $property_rating_points = 0,
+        public readonly ?float  $property_rating_points = 0,
         public readonly ?string $home_type = '',
         public readonly ?string $email_quote_description = '',
         public readonly ?string $description = '',
         public readonly ?string $global_description = '',
         public readonly ?string $floor_name = '',
-        public readonly ?int $not_show_on_website = 0,
+        public readonly ?int    $not_show_on_website = 0,
         public readonly ?string $creation_date = '',
         public readonly ?string $property_code = '',
-        public readonly ?int $housekeeping_zone_id = 0,
+        public readonly ?int    $housekeeping_zone_id = 0,
         public readonly ?string $region = '',
         public readonly ?string $community = '',
-        public readonly ?int $online_bookings = 0,
+        public readonly ?int    $online_bookings = 0,
         public readonly ?string $default_image_path = '',
         public readonly ?string $default_thumbnail_path = '',
         public readonly ?string $original_description = '',
@@ -110,29 +110,37 @@ class Property extends StreamlineModel
         public readonly ?string $variable_trash_pick_up_days = '',
         public readonly ?string $variable_random_text = '',
         public readonly ?string $variable_trash_pick_up = '',
-        public readonly ?int $variable_number_of_vehicles = 0,
+        public readonly ?int    $variable_number_of_vehicles = 0,
         public readonly ?string $location_variable_resort_field_1 = '',
         public readonly ?string $night_gap_logic_enabled = '',
-        public readonly ?int $night_gap_logic_minimal_nights = 0,
-    ) {}
+        public readonly ?int    $night_gap_logic_minimal_nights = 0,
+    )
+    {
+    }
 
     public static function parse(array $data): Property
     {
-        $vtSrc = null; $vtStyle = null;
+        $vtSrc = null;
+        $vtStyle = null;
         if (isset($data['virtual_tour_url']['iframe'])) {
             $vtSrc = $data['virtual_tour_url']['iframe']['src'] ?? '';
             $vtStyle = $data['virtual_tour_url']['iframe']['style'] ?? '';
         }
 
-        $fpSrc = null; $fpStyle = null;
+        $fpSrc = null;
+        $fpStyle = null;
         if (isset($data['floor_plan_url']['iframe'])) {
             $fpSrc = $data['floor_plan_url']['iframe']['src'] ?? '';
             $fpStyle = $data['floor_plan_url']['iframe']['style'] ?? '';
         }
 
         $f = fn($k) => $data[$k] ?? null;
-        $toInt = function ($v) { return isset($v) ? (int)$v : ''; };
-        $toFloat = function ($v) { return isset($v) && is_numeric($v) ? (float)$v : ''; };
+        $toInt = function ($v) {
+            return isset($v) ? (int)$v : '';
+        };
+        $toFloat = function ($v) {
+            return isset($v) && is_numeric($v) ? (float)$v : '';
+        };
 
         return new Property(
             id: $toInt($f('id')),

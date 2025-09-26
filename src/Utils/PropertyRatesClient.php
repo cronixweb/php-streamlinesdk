@@ -6,6 +6,7 @@ use Cronixweb\Streamline\Exceptions\StreamlineApiException;
 use Cronixweb\Streamline\Models\PropertyRate;
 use Cronixweb\Streamline\Traits\ModelClient;
 use Illuminate\Http\Client\ConnectionException;
+use InvalidArgumentException;
 
 class PropertyRatesClient extends ModelClient
 {
@@ -37,32 +38,33 @@ class PropertyRatesClient extends ModelClient
      * @throws ConnectionException
      */
     public function getPropertyRates(
-        int $unitId,
+        int    $unitId,
         string $startdate,
         string $enddate,
-        ?bool $useRoomTypeLogic = null,
-        ?bool $dailyChangeOver = null,
-        ?bool $useHomeawayMaxDaysNotice = null,
+        ?bool  $useRoomTypeLogic = null,
+        ?bool  $dailyChangeOver = null,
+        ?bool  $useHomeawayMaxDaysNotice = null,
         ?array $rateTypeIds = null,
-        ?bool $showLosIfEnabled = null,
-        ?int $maxLosStay = null,
-        ?bool $useAdvLogicIfDefined = null,
-    ): array {
+        ?bool  $showLosIfEnabled = null,
+        ?int   $maxLosStay = null,
+        ?bool  $useAdvLogicIfDefined = null,
+    ): array
+    {
         if ($unitId <= 0) {
-            throw new \InvalidArgumentException('unit_id must be a positive integer');
+            throw new InvalidArgumentException('unit_id must be a positive integer');
         }
         if (!self::isValidDate($startdate) || !self::isValidDate($enddate)) {
-            throw new \InvalidArgumentException('startdate and enddate must be in MM/DD/YYYY format');
+            throw new InvalidArgumentException('startdate and enddate must be in MM/DD/YYYY format');
         }
         if ($dailyChangeOver && $useHomeawayMaxDaysNotice) {
-            throw new \InvalidArgumentException('dailyChangeOver and use_homeaway_max_days_notice cannot be used together');
+            throw new InvalidArgumentException('dailyChangeOver and use_homeaway_max_days_notice cannot be used together');
         }
         if ($maxLosStay !== null) {
             if ($maxLosStay < 1 || $maxLosStay > 180) {
-                throw new \InvalidArgumentException('max_los_stay must be between 1 and 180');
+                throw new InvalidArgumentException('max_los_stay must be between 1 and 180');
             }
             if (!$showLosIfEnabled) {
-                throw new \InvalidArgumentException('max_los_stay requires show_los_if_enabled=true');
+                throw new InvalidArgumentException('max_los_stay requires show_los_if_enabled=true');
             }
         }
 
@@ -81,16 +83,22 @@ class PropertyRatesClient extends ModelClient
             'use_adv_logic_if_defined' => $boolFlag($useAdvLogicIfDefined),
         ];
         foreach ($flags as $k => $v) {
-            if ($v !== null) { $params[$k] = $v; }
+            if ($v !== null) {
+                $params[$k] = $v;
+            }
         }
 
-        if ($maxLosStay !== null) { $params['max_los_stay'] = $maxLosStay; }
+        if ($maxLosStay !== null) {
+            $params['max_los_stay'] = $maxLosStay;
+        }
 
         if ($rateTypeIds !== null && is_array($rateTypeIds) && !empty($rateTypeIds)) {
             // Best-effort structure based on docs; API often accepts { rate_types: { id: [..] } }
             $ids = [];
             foreach ($rateTypeIds as $id) {
-                if (is_int($id) && $id > 0) { $ids[] = $id; }
+                if (is_int($id) && $id > 0) {
+                    $ids[] = $id;
+                }
             }
             if (!empty($ids)) {
                 $params['rate_types'] = ['id' => $ids];

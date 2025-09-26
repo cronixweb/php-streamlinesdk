@@ -15,7 +15,7 @@ class Streamline
 
     private StreamlineClient $client;
 
-    private function __construct(string $apikey,string $apiSecret)
+    private function __construct(string $apikey, string $apiSecret)
     {
         $this->client = new StreamlineClient($apikey, $apiSecret);
     }

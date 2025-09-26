@@ -6,6 +6,7 @@ use Cronixweb\Streamline\Exceptions\StreamlineApiException;
 use Cronixweb\Streamline\Models\Review;
 use Cronixweb\Streamline\Traits\ModelClient;
 use Illuminate\Http\Client\ConnectionException;
+use InvalidArgumentException;
 
 class ReviewsClient extends ModelClient
 {
@@ -14,18 +15,19 @@ class ReviewsClient extends ModelClient
     protected string $findOneMethod = '';
     protected string $findAllMethod = 'GetGuestReviews';
 
-    public function __construct(private readonly StreamlineClient $client,private readonly int $unitId = 0)
+    public function __construct(private readonly StreamlineClient $client, private readonly int $unitId = 0)
     {
         parent::__construct($client);
     }
 
-    public static function for(PropertiesClient $client,int $unitId){
-        return new self($client->client(),$unitId);
+    public static function for(PropertiesClient $client, int $unitId)
+    {
+        return new self($client->client(), $unitId);
     }
 
     public function all($body = []): array
     {
-        if($this->unitId >= 0){
+        if ($this->unitId >= 0) {
             return parent::all([
                 'unit_id' => $this->unitId,
                 ...$body,
@@ -52,14 +54,14 @@ class ReviewsClient extends ModelClient
 
         if ($housekeeperId !== null) {
             if ($housekeeperId <= 0) {
-                throw new \InvalidArgumentException('housekeeper_id must be a positive integer when provided');
+                throw new InvalidArgumentException('housekeeper_id must be a positive integer when provided');
             }
             $params['housekeeper_id'] = $housekeeperId;
         }
 
         if ($unitId !== null) {
             if ($unitId <= 0) {
-                throw new \InvalidArgumentException('unit_id must be a positive integer when provided');
+                throw new InvalidArgumentException('unit_id must be a positive integer when provided');
             }
             $params['unit_id'] = $unitId;
         }

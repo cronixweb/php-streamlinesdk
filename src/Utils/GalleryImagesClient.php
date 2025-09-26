@@ -6,6 +6,7 @@ use Cronixweb\Streamline\Exceptions\StreamlineApiException;
 use Cronixweb\Streamline\Models\GalleryImage;
 use Cronixweb\Streamline\Traits\ModelClient;
 use Illuminate\Http\Client\ConnectionException;
+use InvalidArgumentException;
 
 class GalleryImagesClient extends ModelClient
 {
@@ -30,7 +31,7 @@ class GalleryImagesClient extends ModelClient
     public function getPropertyGalleryImages(int $unitId): array
     {
         if ($unitId <= 0) {
-            throw new \InvalidArgumentException('unit_id must be a positive integer');
+            throw new InvalidArgumentException('unit_id must be a positive integer');
         }
 
         $data = $this->client->request('GetPropertyGalleryImages', [
