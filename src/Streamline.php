@@ -2,7 +2,12 @@
 
 namespace Cronixweb\Streamline;
 
+use Cronixweb\Streamline\Utils\AmenitiesClient;
+use Cronixweb\Streamline\Utils\BookedDaysClient;
+use Cronixweb\Streamline\Utils\GalleryImagesClient;
 use Cronixweb\Streamline\Utils\PropertiesClient;
+use Cronixweb\Streamline\Utils\PropertyRatesClient;
+use Cronixweb\Streamline\Utils\ReviewsClient;
 use Cronixweb\Streamline\Utils\StreamlineClient;
 
 class Streamline
@@ -10,12 +15,12 @@ class Streamline
 
     private StreamlineClient $client;
 
-    private function __construct(string $apikey,string $apiSecret)
+    private function __construct(string $apikey, string $apiSecret)
     {
         $this->client = new StreamlineClient($apikey, $apiSecret);
     }
 
-    public static function api(string $apikey, string $apiSecret)
+    public static function api(string $apikey, string $apiSecret): Streamline
     {
         return new self($apikey, $apiSecret);
     }
@@ -23,7 +28,7 @@ class Streamline
     /**
      * Refresh the token
      */
-    public function refreshToken()
+    public function refreshToken(): array
     {
         $response = $this->client->request('RenewExpiredToken');
 
@@ -44,4 +49,28 @@ class Streamline
         return new PropertiesClient($this->client);
     }
 
+    public function amenities(): AmenitiesClient
+    {
+        return new AmenitiesClient($this->client);
+    }
+
+    public function reviews(): ReviewsClient
+    {
+        return new ReviewsClient($this->client);
+    }
+
+    public function galleryImages(): GalleryImagesClient
+    {
+        return new GalleryImagesClient($this->client);
+    }
+
+    public function bookedDates(): BookedDaysClient
+    {
+        return new BookedDaysClient($this->client);
+    }
+
+    public function propertyRates(): PropertyRatesClient
+    {
+        return new PropertyRatesClient($this->client);
+    }
 }

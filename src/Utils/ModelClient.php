@@ -3,7 +3,6 @@
 namespace Cronixweb\Streamline\Traits;
 
 use Cronixweb\Streamline\Exceptions\StreamlineApiException;
-use Cronixweb\Streamline\Models\Property;
 use Cronixweb\Streamline\Utils\StreamlineClient;
 use Illuminate\Http\Client\ConnectionException;
 
@@ -31,16 +30,19 @@ class ModelClient
 
     }
 
+    public function client(): StreamlineClient
+    {
+        return $this->client;
+    }
+
     /**
      * @return StreamlineModel[]
      * @throws StreamlineApiException
      * @throws ConnectionException
      */
-    public function all(): array
+    public function all($body = []): array
     {
-        $data = $this->client->request($this->findAllMethod, [
-            $this->primaryKey => 0,
-        ]);
+        $data = $this->client->request($this->findAllMethod, $body);
 
         $properties = [];
 

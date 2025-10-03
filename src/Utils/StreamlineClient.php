@@ -13,7 +13,7 @@ class StreamlineClient
 
     private PendingRequest $request;
 
-    public function __construct(private readonly string $apikey,private readonly string $apiSecret)
+    public function __construct(private readonly string $apikey, private readonly string $apiSecret)
     {
         $this->request = Http::baseUrl("https://web.streamlinevrs.com/api/json");
     }
@@ -38,13 +38,13 @@ class StreamlineClient
         ];
 
         /** @var Response $response */
-        $response = $this->request->post('',$body);
+        $response = $this->request->post('', $body);
 
-        if($response->ok()){
+        if ($response->ok()) {
             return $this->parseResponse($response);
         }
 
-        throw new StreamlineApiException("Error: ".$response->body());
+        throw new StreamlineApiException("Error: " . $response->body());
 
     }
 
@@ -52,10 +52,10 @@ class StreamlineClient
     {
         $response = $response->json();
 
-        if(isset($response['Response']['data'])){
+        if (isset($response['Response']['data'])) {
             return $response['Response']['data'];
         }
 
-        throw new StreamlineApiException("Invalid Response: ".json_encode($response));
+        throw new StreamlineApiException("Invalid Response: " . json_encode($response));
     }
 }
