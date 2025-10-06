@@ -98,7 +98,7 @@ class PropertyRatesClient extends ModelClient
             throw new InvalidArgumentException('unit_id must be a positive integer');
         }
         if (!self::isValidDate($startDate) || !self::isValidDate($endDate)) {
-            throw new InvalidArgumentException('startdate and enddate must be in MM/DD/YYYY format');
+            throw new InvalidArgumentException('start_date and end_date must be in MM/DD/YYYY format');
         }
         if ($dailyChangeOver && $useHomeawayMaxDaysNotice) {
             throw new InvalidArgumentException('dailyChangeOver and use_homeaway_max_days_notice cannot be used together');
