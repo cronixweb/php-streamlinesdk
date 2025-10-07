@@ -32,7 +32,7 @@ class StreamlineClient
         $body = [
             'methodName' => $methodName,
             'params' => [
-                'authParams' => $authParams,
+                ...$authParams,
                 ...$data,
             ]
         ];
@@ -48,6 +48,9 @@ class StreamlineClient
 
     }
 
+    /**
+     * @throws StreamlineApiException
+     */
     private function parseResponse($response)
     {
         $response = $response->json();

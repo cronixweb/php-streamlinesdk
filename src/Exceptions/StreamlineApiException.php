@@ -2,7 +2,9 @@
 
 namespace Cronixweb\Streamline\Exceptions;
 
-class StreamlineApiException extends \Exception
+use Exception;
+
+class StreamlineApiException extends Exception
 {
 
 }
