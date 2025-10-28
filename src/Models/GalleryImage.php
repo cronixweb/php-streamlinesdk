@@ -8,7 +8,8 @@ class GalleryImage extends StreamlineModel
 {
     public function __construct(
         public readonly ?int    $id = 0,
-        public readonly ?string $description = '',
+        public readonly ?array $title = [],
+        public readonly ?array $description = [],
         public readonly ?string $original_path = '',
         public readonly ?string $image_path = '',
         public readonly ?string $thumbnail_path = '',
@@ -20,6 +21,7 @@ class GalleryImage extends StreamlineModel
     {
         return new GalleryImage(
             id: isset($data['id']) ? (int)$data['id'] : '',
+            title: $data['title'] ?? '',
             description: $data['description'] ?? '',
             original_path: $data['original_path'] ?? '',
             image_path: $data['image_path'] ?? '',

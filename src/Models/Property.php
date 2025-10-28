@@ -136,10 +136,10 @@ class Property extends StreamlineModel
 
         $f = fn($k) => $data[$k] ?? null;
         $toInt = function ($v) {
-            return isset($v) ? (int)$v : '';
+            return isset($v) ? (int)$v : null;
         };
         $toFloat = function ($v) {
-            return isset($v) && is_numeric($v) ? (float)$v : '';
+            return isset($v) && is_numeric($v) ? (float)$v : null;
         };
 
         return new Property(

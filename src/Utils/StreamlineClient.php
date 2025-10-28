@@ -55,8 +55,21 @@ class StreamlineClient
     {
         $response = $response->json();
 
-        if (isset($response['Response']['data'])) {
-            return $response['Response']['data'];
+        if (isset($response['response']['data']['property'])) {
+            return $response['response']['data']['property'];
+        }
+        
+        if (isset($response['data']['property'])) {
+            return $response['data']['property'];
+        }
+        if (isset($response['data']['amenity'])) {
+            return $response['data']['amenity'];
+        }
+        if (isset($response['data']['image'])) {
+            return $response['data']['image'];
+        }
+        if (isset($response['data'])) {
+            return $response['data'];
         }
 
         throw new StreamlineApiException("Invalid Response: " . json_encode($response));
