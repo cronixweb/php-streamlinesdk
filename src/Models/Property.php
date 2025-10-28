@@ -252,4 +252,15 @@ class Property extends StreamlineModel
             night_gap_logic_minimal_nights: $toInt($f('night_gap_logic_minimal_nights')),
         );
     }
+
+    public function toArray(): array
+    {
+        return get_object_vars($this);
+    }
+
+    public function jsonSerialize(): array
+    {
+        return $this->toArray();
+    }
+
 }
