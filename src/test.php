@@ -1,12 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 use Cronixweb\Streamline\Streamline;
 
-// Replace with your actual API credentials
+// Composer autoload (adjust path if you move this file)
+require __DIR__ . '/../vendor/autoload.php';
+
+// Read credentials from environment instead of hardcoding
 $apiKey = getenv('STREAMLINE_TOKEN_KEY') ?: '';
 $apiSecret = getenv('STREAMLINE_TOKEN_SECRET') ?: '';
 
+if (!$apiKey || !$apiSecret) {
+    header('Content-Type: text/plain');
+    echo "Missing credentials. Please set STREAMLINE_TOKEN_KEY and STREAMLINE_TOKEN_SECRET environment variables.";
+    exit(1);
+}
+
 $api = Streamline::api($apiKey, $apiSecret);
+
+header('Content-Type: text/plain');
 
 // Sample unit id for testing
 $unitId = 28254; // replace with a real unit id
@@ -22,7 +35,7 @@ try {
 
 // 2) Amenities for the property
 try {
-    $amenities = $api->properties($unitId)->amenities(23432)->all();
+    $amenities = $api->properties()->amenities($unitId)->all();
     echo "Amenities:\n";
     print_r($amenities);
 } catch (Throwable $e) {
@@ -31,7 +44,7 @@ try {
 
 // 3) Guest reviews (surveys)
 try {
-    $reviews = $api->properties()->reviews(23432)->all();
+    $reviews = $api->properties()->reviews($unitId)->all();
     echo "Reviews:\n";
     print_r($reviews);
 } catch (Throwable $e) {
@@ -40,7 +53,7 @@ try {
 
 // 4) Gallery images
 try {
-    $images = $api->properties($unitId)->galleryImages(23432)->all();
+    $images = $api->properties()->galleryImages($unitId)->all();
     echo "Gallery Images:\n";
     print_r($images);
 } catch (Throwable $e) {
@@ -49,7 +62,11 @@ try {
 
 // 5) Booked/Blocked dates
 try {
-    $booked = $api->properties($unitId)->propertyRates(23432)->all(['startDate' => '12/05/2019', 'endDate' => '12/05/2020']);
+    $booked = $api->bookedDates()->all([
+        'unit_id'   => $unitId,
+        'startDate' => '12/05/2019',
+        'endDate'   => '12/05/2020',
+    ]);
     echo "Booked/Blocked Dates:\n";
     print_r($booked);
 } catch (Throwable $e) {

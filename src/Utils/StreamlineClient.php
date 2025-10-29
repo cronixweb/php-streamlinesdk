@@ -6,7 +6,7 @@ use Cronixweb\Streamline\Exceptions\StreamlineApiException;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\Factory;
 
 class StreamlineClient
 {
@@ -15,7 +15,9 @@ class StreamlineClient
 
     public function __construct(private readonly string $apikey, private readonly string $apiSecret)
     {
-        $this->request = Http::baseUrl("https://web.streamlinevrs.com/api/json");
+        // Use the HTTP client Factory directly to avoid depending on Laravel Facades
+        $http = new Factory();
+        $this->request = $http->baseUrl("https://web.streamlinevrs.com/api/json");
     }
 
     /**
@@ -55,18 +57,8 @@ class StreamlineClient
     {
         $response = $response->json();
 
-        if (isset($response['response']['data']['property'])) {
-            return $response['response']['data']['property'];
-        }
-        
-        if (isset($response['data']['property'])) {
-            return $response['data']['property'];
-        }
-        if (isset($response['data']['amenity'])) {
-            return $response['data']['amenity'];
-        }
-        if (isset($response['data']['image'])) {
-            return $response['data']['image'];
+        if (isset($response['response']['data'])) {
+            return $response['response']['data']    ;
         }
         if (isset($response['data'])) {
             return $response['data'];
