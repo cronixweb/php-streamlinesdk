@@ -11,6 +11,7 @@ class PropertiesClient extends ModelClient
     protected string $primaryKey = "unit_id";
     protected string $findOneMethod = "GetPropertyInfo";
     protected string $findAllMethod = "GetPropertyList";
+    protected string $dataKey = "property";
 
     public function reviews(int $unitId): ReviewsClient
     {

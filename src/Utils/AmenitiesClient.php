@@ -14,6 +14,7 @@ class AmenitiesClient extends ModelClient
     protected string $primaryKey = 'amenity_id';
     protected string $findOneMethod = '';
     protected string $findAllMethod = 'GetPropertyAmenities';
+    protected string $dataKey = 'amenity';
 
     public function __construct(private readonly StreamlineClient $client, private readonly int $unitId = 0)
     {
