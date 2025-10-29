@@ -8,8 +8,8 @@ class GalleryImage extends StreamlineModel
 {
     public function __construct(
         public readonly ?int    $id = 0,
-        public readonly ?array $title = [],
-        public readonly ?array $description = [],
+        public readonly string|array $title = '',
+        public readonly string|array $description = '',
         public readonly ?string $original_path = '',
         public readonly ?string $image_path = '',
         public readonly ?string $thumbnail_path = '',
