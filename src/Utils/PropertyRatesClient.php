@@ -34,8 +34,8 @@ class PropertyRatesClient extends ModelClient
             throw new InvalidArgumentException('unit_id is required and must be a positive integer');
         }
 
-        $startDate = $body['startDate'] ?? null;
-        $endDate = $body['endDate'] ?? null;
+        $startDate = $body['startdate'] ?? null;
+        $endDate = $body['enddate'] ?? null;
         if (!$startDate || !$endDate) {
             throw new InvalidArgumentException('startDate and endDate are required (MM/DD/YYYY)');
         }

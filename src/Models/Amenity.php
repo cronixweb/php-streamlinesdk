@@ -8,9 +8,9 @@ class Amenity extends StreamlineModel
 {
     public function __construct(
         public readonly ?string $group_name = '',
-        public readonly ?string $group_description = '',
+        public readonly string|array $group_description = '',
         public readonly ?string $amenity_name = '',
-        public readonly ?string $amenity_description = '',
+        public readonly string|array $amenity_description = '',
         public readonly ?int    $amenity_id = 0,
         public readonly ?string $amenity_show_on_website = '',
     )
