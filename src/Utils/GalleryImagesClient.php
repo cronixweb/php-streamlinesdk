@@ -14,7 +14,7 @@ class GalleryImagesClient extends ModelClient
     protected string $primaryKey = 'unit_id';
     protected string $findOneMethod = '';
     protected string $findAllMethod = 'GetPropertyGalleryImages';
-    protected string $dataKey = 'image';
+    protected string $responseKey = 'image';
 
     public function __construct(private readonly StreamlineClient $client, private readonly int $unitId = 0)
     {

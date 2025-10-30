@@ -12,61 +12,30 @@ class BookedDaysClient extends ModelClient
 {
     protected string $modelName = BookedDate::class;
     protected string $primaryKey = 'unit_id';
+    protected string $findOneMethod = 'GetBlockedDaysForUnit';
     protected string $findAllMethod = 'GetBlockedDaysForUnit';
-    protected string $findOneMethod = '';
+    protected string $responseKey = 'blocked_days';
 
-    /**
-     * @param StreamlineClient $client
-     * @param int $unitId The unit_id to scope this client to (0 if unscoped)
-     */
-    public function __construct(private readonly StreamlineClient $client, private readonly int $unitId = 0)
+    public function __construct(private readonly StreamlineClient $client,private readonly int $unitId = 0)
     {
         parent::__construct($client);
     }
 
-    /**
-     * Create a new client instance scoped to a specific unit.
-     *
-     * @param PropertiesClient $client The parent client
-     * @param int $unitId The unit_id to scope to
-     * @return self
-     */
     public static function for(PropertiesClient $client, int $unitId): self
     {
         return new self($client->client(), $unitId);
     }
 
-        /**
-     * Fetch blocked days using a parameter array.
-     * Implements the 'all()' method expected by ModelClient for findAllMethod.
-     *
-     * @param array $body Parameters:
-     * - 'startdate' (string|null) OPTIONAL: MM/DD/YYYY
-     * - 'enddate' (string|null) OPTIONAL: MM/DD/YYYY (required for multiple unit_ids)
-     * - 'display_b2b_blocks' (bool|null) OPTIONAL: If true, include no back-to-back booking blocks
-     * - 'allow_invalid' (bool|null) OPTIONAL: Include inactive units (for multi-unit searches)
-     * - 'owning_id' (int|null) OPTIONAL: Filter for a specific owning record (omit for multi-unit)
-     * - 'unit_id' (int|array) OPTIONAL: Overrides client's unit_id. For multi-unit requests.
-     * @return BookedDate[]
-     * @throws StreamlineApiException
-     * @throws ConnectionException
-     * @throws InvalidArgumentException
-     */
     public function all($body = []): array
     {
-        $unitId = $this->unitId > 0 ? $this->unitId : ($body['unit_id'] ?? 0);
-        if ($unitId <= 0) {
-            throw new InvalidArgumentException('unit_id is required and must be a positive integer');
+        if ($this->unitId >= 0) {
+            return parent::all([
+                'unit_id' => $this->unitId,
+                ...$body,
+            ]);
         }
 
-        return $this->getBlockedDaysForUnit(
-            $unitId,
-            $body['startdate'] ?? null,
-            $body['enddate'] ?? null,
-            $body['display_b2b_blocks'] ?? null,
-            $body['allow_invalid'] ?? null,
-            $body['owning_id'] ?? null
-        );
+        return parent::all($body);
     }
 
     /**
@@ -95,13 +64,17 @@ class BookedDaysClient extends ModelClient
             }
         }
 
-        // Validate dates (using static helper)
-        if ($startdate !== null && !self::isValidDate($startdate)) {
-            throw new InvalidArgumentException('startdate must be in MM/DD/YYYY format');
-        }
-        if ($enddate !== null && !self::isValidDate($enddate)) {
-            throw new InvalidArgumentException('enddate must be in MM/DD/YYYY format');
-        }
+        // Validate dates (basic MM/DD/YYYY check)
+        $validateDate = function (?string $date, string $name) {
+            if ($date === null) {
+                return;
+            }
+            if (!preg_match('/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/', $date)) {
+                throw new InvalidArgumentException($name . ' must be in MM/DD/YYYY format');
+            }
+        };
+        $validateDate($startdate, 'startdate');
+        $validateDate($enddate, 'enddate');
 
         // If multiple units, enddate is mandatory per docs
         if (count($unitIds) > 1 && $enddate === null) {
@@ -159,14 +132,6 @@ class BookedDaysClient extends ModelClient
             $result[] = BookedDate::parse($item);
         }
         return $result;
-    }
-
-    /**
-     * Helper function to validate date format.
-     */
-    private static function isValidDate(string $date): bool
-    {
-        return (bool)preg_match('/^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/\d{4}$/', $date);
     }
 
     private function isAssoc(array $arr): bool

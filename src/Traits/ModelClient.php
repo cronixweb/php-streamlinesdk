@@ -11,8 +11,8 @@ class ModelClient
     protected string $findOneMethod = "";
     protected string $findAllMethod = "";
     protected string $primaryKey = "";
+    protected string $responseKey = "";
     protected string $modelName = StreamlineModel::class;
-    protected string $dataKey = "";
 
 
     public function __construct(private StreamlineClient $client)
@@ -44,17 +44,23 @@ class ModelClient
     public function all($body = []): array
     {
         $data = $this->client->request($this->findAllMethod, $body);
-        // Dynamically find the list using the key
-        if (!isset($data[$this->dataKey]) || !is_array($data[$this->dataKey])) {
-            throw new StreamlineApiException("Expected array key '{$this->dataKey}' not found in 'all' response payload.");
-        }
-        $properties = [];
 
-        foreach ($data[$this->dataKey] as $propertyData) {
-            $properties[] = ($this->modelName)::parse($propertyData);
+        $parsedData = [];
+
+        // Check if the response is an array of objects or an object
+        if(count(array_filter(array_keys($data[$this->responseKey]), 'is_string')) > 0){
+            $data[$this->responseKey] = [$data[$this->responseKey]];
         }
 
-        return $properties;
+        if($this->responseKey === 'blocked_days'){
+            $data[$this->responseKey] = $data[$this->responseKey][0]['blocked'];
+        }
+
+        foreach ($data[$this->responseKey] ?? [] as $modelData) {
+            $parsedData[] = ($this->modelName)::parse($modelData);
+        }
+
+        return $parsedData;
     }
 
 }

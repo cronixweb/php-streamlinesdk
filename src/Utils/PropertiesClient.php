@@ -11,7 +11,7 @@ class PropertiesClient extends ModelClient
     protected string $primaryKey = "unit_id";
     protected string $findOneMethod = "GetPropertyInfo";
     protected string $findAllMethod = "GetPropertyList";
-    protected string $dataKey = "property";
+    protected string $responseKey = 'property';
 
     public function reviews(int $unitId): ReviewsClient
     {
@@ -33,7 +33,7 @@ class PropertiesClient extends ModelClient
         return PropertyRatesClient::for($this, $unitId);
     }
 
-    public function bookedDates(int $unitId): BookedDaysClient
+    public function bookedDays(int $unitId): BookedDaysClient
     {
         return BookedDaysClient::for($this, $unitId);
     }
