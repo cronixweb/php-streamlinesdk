@@ -2,6 +2,7 @@
   "name": "cronixweb/streamline-sdk",
   "description": "PHP based SDK to access stramlinevrs.com apis",
   "type": "library",
+  "license": "MIT",
   "require": {
     "illuminate/http": "^12.31"
   },
