@@ -53,7 +53,11 @@ class ModelClient
         }
 
         if($this->responseKey === 'blocked_days'){
-            $data[$this->responseKey] = $data[$this->responseKey][0]['blocked'];
+            if(isset($data[$this->responseKey][0]['blocked'])){
+                $data[$this->responseKey] = $data[$this->responseKey][0]['blocked'];
+            }else{
+                $data[$this->responseKey] = [];
+            }
         }
 
         foreach ($data[$this->responseKey] ?? [] as $modelData) {
