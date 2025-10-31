@@ -9,6 +9,7 @@ use Cronixweb\Streamline\Utils\PropertiesClient;
 use Cronixweb\Streamline\Utils\PropertyRatesClient;
 use Cronixweb\Streamline\Utils\ReviewsClient;
 use Cronixweb\Streamline\Utils\StreamlineClient;
+use Cronixweb\Streamline\Utils\FeedbacksClient;
 
 class Streamline
 {
@@ -72,5 +73,9 @@ class Streamline
     public function propertyRates(): PropertyRatesClient
     {
         return new PropertyRatesClient($this->client);
+    }
+    public function feedbacks(): FeedbacksClient
+    {
+        return new FeedbacksClient($this->client);
     }
 }
