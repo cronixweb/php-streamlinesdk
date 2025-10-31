@@ -75,20 +75,23 @@ After installation, run:
 This SDK requires Streamline API credentials: `token_key` and `token_secret`.
 
 Recommended: store them in environment variables and your Laravel config, e.g.:
-- .env:
+- `.env`:
+```bash
   STREAMLINE_TOKEN_KEY=your_token_key
   STREAMLINE_TOKEN_SECRET=your_token_secret
+```
 
-- config/services.php:
+- `config/services.php`:
+```php
   'streamline' => [
       'token_key' => env('STREAMLINE_TOKEN_KEY'),
       'token_secret' => env('STREAMLINE_TOKEN_SECRET'),
   ],
-
+```
 
 ## Quick Start
 Example in a Laravel controller or service class:
-
+```php
 use Cronixweb\Streamline\Streamline;
 
 $apiKey = config('services.streamline.token_key');
@@ -101,7 +104,7 @@ $properties = $streamline->properties()->all();
 
 // Get one property by unit_id
 $property = $streamline->properties()->find(12345);
-
+```
 
 ## Usage
 Below are examples for each available client. All examples assume you already instantiated `Streamline` as shown in Quick Start.
@@ -111,37 +114,42 @@ Important: Unless otherwise noted, date inputs use the format MM/DD/YYYY.
 
 ### Properties
 - List properties:
-  $properties = $streamline->properties()->all();
+  `$properties = $streamline->properties()->all();`
 
 - Get one property by unit_id:
-  $property = $streamline->properties()->find(12345);
+  `$property = $streamline->properties()->find(12345);`
 
 - Traverse to related clients for a specific property (scoped helpers):
+  ```php
   $propClient = $streamline->properties();
   $amenitiesClient = $propClient->amenities(12345);      // AmenitiesClient
   $galleryClient   = $propClient->galleryImages(12345);  // GalleryImagesClient
   $reviewsClient   = $propClient->reviews(12345);        // ReviewsClient
   $ratesClient     = $propClient->propertyRates(12345);  // PropertyRatesClient
+  ```
 
 
 ### Amenities
 - Get amenities for a unit:
+```php
   $amenities = $streamline->properties()->amenities(12345)->all();
   // or using the direct method
   // $amenities = $streamline->amenities()->getPropertyAmenities(12345);
-
+```
 
 ### Gallery Images
 - Get gallery images for a unit:
+```php
   $images = $streamline->properties()->galleryImages(12345)->all();
   // or
   // $images = $streamline->galleryImages()->getPropertyGalleryImages(12345);
-
+```
 Each item is parsed into a GalleryImage model-like array/object, depending on the specific parser; the fields reflect the API response.
 
 
 ### Reviews
 - Get guest reviews (optionally filter by housekeeper_id, unit_id, return_all):
+```php
   use Cronixweb\Streamline\Utils\ReviewsClient; // if you need types
 
   // Scoped to a unit via properties client
@@ -153,10 +161,11 @@ Each item is parsed into a GalleryImage model-like array/object, depending on th
       unitId: 12345,
       returnAll: true
   );
-
+```
 
 ### Booked/Blocked Days
 - Fetch blocked days for one unit:
+```php
   $blocked = $streamline->bookedDates()->getBlockedDaysForUnit(
       unitId: 12345,
       startdate: '01/01/2025', // optional
@@ -165,8 +174,9 @@ Each item is parsed into a GalleryImage model-like array/object, depending on th
       allowInvalid: false,     // optional
       owningId: null           // optional, only for single unit
   );
-
+```
 - Fetch blocked days for multiple units (enddate required when multiple ids):
+```php
   $blocked = $streamline->bookedDates()->getBlockedDaysForUnit(
       unitId: [12345, 67890],
       startdate: '01/01/2025',
@@ -174,7 +184,7 @@ Each item is parsed into a GalleryImage model-like array/object, depending on th
       displayB2BBlocks: true,
       allowInvalid: false
   );
-
+```
 Returns an array of BookedDate items parsed from the API.
 
 
@@ -182,6 +192,7 @@ Returns an array of BookedDate items parsed from the API.
 There are two ways to fetch rates:
 
 1) Using the high-level all() which validates inputs and maps options:
+```php
   $rates = $streamline->propertyRates()->all([
       'unit_id' => 12345,
       'startdate' => '01/01/2025',
@@ -198,8 +209,10 @@ There are two ways to fetch rates:
       'max_los_stay' => 14, // requires show_los_if_enabled = true
       'use_adv_logic_if_defined' => false,
   ]);
+```
 
 2) Using the explicit method with typed parameters:
+```php
   $rates = $streamline->propertyRates()->getPropertyRates(
       unitId: 12345,
       startdate: '01/01/2025',
@@ -212,33 +225,36 @@ There are two ways to fetch rates:
       maxLosStay: 14,
       useAdvLogicIfDefined: null
   );
-
+```
 Returned items are parsed into PropertyRate models.
 
 Validation rules enforced by the client:
-- unit_id must be a positive integer
-- startdate and enddate must be in MM/DD/YYYY format
-- dailyChangeOver and use_homeaway_max_days_notice cannot be used together
-- If max_los_stay is set, it must be 1–180 and requires show_los_if_enabled=true
+- `unit_id` must be a positive integer
+- `startdate` and enddate must be in `MM/DD/YYYY` format
+- `dailyChangeOver` and `use_homeaway_max_days_notice` cannot be used together
+- If `max_los_stay` is set, it must be 1–180 and requires `show_los_if_enabled=true`
 
 
 ### Token Renewal
 - You can refresh/rotate your token pair via:
+```php
   $new = $streamline->refreshToken();
   // returns: ['apikey' => '...', 'apiSecret' => '...']
   // The Streamline instance automatically updates its internal client.
+  ```
 
 Persist the new credentials in your app (e.g., save to database or update env variables) if needed.
 
 
 ## Error Handling
 Most client methods may throw:
-- Cronixweb\Streamline\Exceptions\StreamlineApiException when the API returns an error or the response is malformed.
-- Illuminate\Http\Client\ConnectionException for transport-level issues.
-- InvalidArgumentException when you pass invalid inputs (e.g., bad dates, missing unit_id, etc.).
+- `Cronixweb\Streamline\Exceptions\StreamlineApiException` when the API returns an error or the response is malformed.
+- `Illuminate\Http\Client\ConnectionException` for transport-level issues.
+- `InvalidArgumentException` when you pass invalid inputs (e.g., bad dates, missing unit_id, etc.).
 
 Recommended handling pattern:
 
+```php
 try {
     $rates = $streamline->propertyRates()->getPropertyRates(12345, '01/01/2025', '01/31/2025');
 } catch (\Cronixweb\Streamline\Exceptions\StreamlineApiException $e) {
@@ -248,7 +264,7 @@ try {
 } catch (\InvalidArgumentException $e) {
     // Handle input validation error
 }
-
+```
 
 ## Date Formats and Common Parameters
 - Dates are expected as strings in MM/DD/YYYY; the SDK performs basic validation where relevant.
@@ -285,4 +301,4 @@ try {
 - PSR-4 Autoloading (Composer): https://getcomposer.org/doc/04-schema.md#psr-4
 - PHP Manual: https://www.php.net/manual/en/
 
-Last updated: 2025-09-26
+Last updated: 2025-10-30

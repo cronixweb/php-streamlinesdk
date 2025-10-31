@@ -38,4 +38,9 @@ class PropertiesClient extends ModelClient
         return BookedDaysClient::for($this, $unitId);
     }
 
+    public function feedbacks(int $unitId): FeedbacksClient
+    {
+        return FeedbacksClient::for($this, $unitId);
+    }
+
 }
