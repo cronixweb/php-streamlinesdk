@@ -1,100 +1,220 @@
-# Streamline VRS PHP SDK
+<p align="center">
+  <a href="https://cronixweb.com" target="_blank" rel="noreferrer">
+    <img src="https://cronixweb.com/wp-content/uploads/2024/04/Logo-1.svg" alt="Cronix LLC" height="72">
+  </a>
+</p>
 
-A PHP SDK for interacting with Streamline VRS JSON API from your Laravel application. It provides convenient, typed clients to access properties, amenities, reviews, gallery images, booked days, and property rates, plus helper utilities like token renewal.
+<p align="center">
+  <a href="https://www.streamlinevrs.com" target="_blank" rel="noreferrer">
+    <strong>Streamline VRS</strong><br/>
+    <sub>Vacation Rental Software · All-in-one property management platform for professional managers</sub>
+  </a>
+</p>
 
-Status: Actively evolving. Please review the Requirements and Notes carefully before integrating.
+<h1 align="center">Streamline VRS PHP SDK</h1>
 
+<p align="center">
+  Laravel-ready, typed PHP SDK for the <a href="https://www.streamlinevrs.com" target="_blank" rel="noreferrer">Streamline Vacation Rental Software (VRS)</a> JSON API,<br>
+  engineered by <a href="https://cronixweb.com" target="_blank" rel="noreferrer">Cronix LLC</a>, a full-service eCommerce &amp; digital agency.
+</p>
+
+<p align="center">
+  <a href="https://packagist.org/packages/cronixweb/streamline-sdk">
+    <img src="https://img.shields.io/badge/Packagist-cronixweb%2Fstreamline--sdk-informational" alt="Packagist">
+  </a>
+  <img src="https://img.shields.io/badge/PHP-8.2%2B-777bb4" alt="PHP 8.2+">
+  <img src="https://img.shields.io/badge/Laravel-HTTP%20Client%20Ready-orange" alt="Laravel HTTP">
+  <img src="https://img.shields.io/badge/Status-Actively%20Evolving-success" alt="Status: Actively evolving">
+  <img src="https://img.shields.io/badge/License-MIT-lightgrey" alt="MIT License">
+</p>
+
+---
+
+> Need help integrating <a href="https://www.streamlinevrs.com" target="_blank" rel="noreferrer">Streamline VRS</a> into your Laravel or eCommerce stack?<br>
+> Cronix LLC can architect, build, and maintain your integration from end-to-end.<br>
+> 👉 <strong><a href="https://cronixweb.com/contact-us" target="_blank" rel="noreferrer">Talk to an expert</a></strong> or email <strong>sales@cronixweb.com</strong>.
+
+---
 
 ## Table of Contents
-- Overview
-- Features
-- Requirements
-- Installation
-- Configuration
-- Quick Start
-- Usage
-  - Properties
-  - Amenities
-  - Gallery Images
-  - Reviews
-  - Booked/Blocked Days
-  - Property Rates
-  - Token Renewal
-- Error Handling
-- Date Formats and Common Parameters
-- FAQ and Notes
-- Contributing
-- License
-- Resources and Bibliography
 
+- [Overview](#overview)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Quick Start](#quick-start)
+- [Usage](#usage)
+  - [Properties](#properties)
+  - [Amenities](#amenities)
+  - [Gallery Images](#gallery-images)
+  - [Reviews](#reviews)
+  - [Booked / Blocked Days](#booked--blocked-days)
+  - [Property Rates](#property-rates)
+  - [Token Renewal](#token-renewal)
+- [Error Handling](#error-handling)
+- [Date Formats &amp; Common Parameters](#date-formats--common-parameters)
+- [FAQ &amp; Notes](#faq--notes)
+- [Cronix LLC · Services &amp; Support](#cronix-llc--services--support)
+- [Contributing](#contributing)
+- [License](#license)
+- [Resources &amp; Bibliography](#resources--bibliography)
+
+---
 
 ## Overview
-This SDK is a thin wrapper around the Streamline VRS JSON API (https://web.streamlinevrs.com/api/json). It handles request building, authentication parameters, common parsing patterns, and provides small model classes for consistency.
 
-Namespaces used by the code are under `Cronixweb\Streamline\...` (for example, `Cronixweb\Streamline\Streamline`).
+**Streamline VRS PHP SDK** is a thin, Laravel-friendly wrapper around the  
+[Streamline VRS JSON API](https://web.streamlinevrs.com/api/json).
 
+It focuses on:
+
+- Handling authentication and token renewal
+- Building and sending requests via Laravel’s HTTP client
+- Parsing common response structures into small, predictable models
+- Providing ergonomic, typed clients for the Streamline endpoints you use most
+
+Namespaces follow:
+
+```php
+Cronixweb\Streamline\...
+```
+
+For example:
+
+```php
+use Cronixweb\Streamline\Streamline;
+```
+
+> **Note:** This package is not officially affiliated with Streamline VRS.  
+> It is maintained by **[Cronix LLC](https://cronixweb.com)**, an eCommerce and digital agency that frequently works with travel, hospitality, and property platforms.
+
+---
 
 ## Features
-- Simple entry point to authenticate and obtain service-specific clients.
-- Methods for common API endpoints:
-  - GetPropertyList, GetPropertyInfo
-  - GetPropertyAmenities
-  - GetPropertyGalleryImages
-  - GetGuestReviews
-  - GetBlockedDaysForUnit
-  - GetPropertyRates
-  - RenewExpiredToken
-- Light model parsers to normalize typical response structures.
-- Defensive handling of API variations (singular vs list response nodes).
 
+- 🔐 **Simple Streamline authentication entry point**  
+  Single `Streamline::api($key, $secret)` to bootstrap all clients against the Streamline VRS API.
+
+- 🔗 **Convenient, typed clients for common resources**
+  - Properties: `GetPropertyList`, `GetPropertyInfo`
+  - Amenities: `GetPropertyAmenities`
+  - Media: `GetPropertyGalleryImages`
+  - Reviews: `GetGuestReviews`
+  - Availability: `GetBlockedDaysForUnit`
+  - Rates: `GetPropertyRates`
+  - Auth: `RenewExpiredToken`
+
+- 🧩 **Lightweight model parsing**
+  - Normalizes typical response structures into model-like arrays/objects.
+  - Handles “single item vs list” response quirks defensively.
+
+- 🧰 **Laravel-native tooling**
+  - Uses `Illuminate\Support\Facades\Http` internally.
+  - Fits naturally into Laravel services, controllers, jobs, and console commands.
+
+- 🚧 **Actively evolving**
+  - Designed to be extended with more endpoints and helpers over time.
+
+---
 
 ## Requirements
-- PHP: 8.2 or higher (aligned with Illuminate 12.x requirements)
-- Laravel or an environment where Illuminate HTTP client and Facades are available
-  - This SDK uses `Illuminate\Support\Facades\Http` internally
-- Composer
 
-Note on namespaces/autoloading:
-- The code namespaces are `Cronixweb\Streamline\...`.
-- Ensure your composer autoload maps `Cronixweb\\Streamline\\` to the `src/` directory when consuming this package. If you use this package via Packagist/Composer, verify the autoload section points to this namespace.
+- **PHP**: `8.2` or higher (aligned with Laravel / Illuminate 12.x)
+- **Laravel** (recommended)
+  - Or any environment where the Laravel HTTP client & facades are available.
+- **Composer**
 
+Namespace & autoload notes:
+
+- SDK namespaces: `Cronixweb\Streamline\...`
+- Ensure your Composer autoload maps:
+
+```json
+{
+  "autoload": {
+    "psr-4": {
+      "Cronixweb\\Streamline\\": "src/"
+    }
+  }
+}
+```
+
+If you install via Packagist, this will typically be preconfigured.
+
+---
 
 ## Installation
+
 Install via Composer in your Laravel project:
 
-- If this package is published to Packagist as `cronixweb/streamline-sdk`:
-  composer require cronixweb/streamline-sdk
+```bash
+composer require cronixweb/streamline-sdk
+```
 
-- For local development (path repository), add to your project's composer.json repositories and require it accordingly. Ensure autoload maps `Cronixweb\\Streamline\\` to `vendor/cronixweb/streamline-sdk/src`.
+> If you’re still developing locally or using this via a path repository, point your project’s `repositories` section to your checkout and map the namespace to `src/`.
 
-After installation, run:
-  composer dump-autoload
+Example (path repository) in your app’s `composer.json`:
 
+```json
+{
+  "repositories": [
+    {
+      "type": "path",
+      "url": "packages/cronixweb/streamline-sdk"
+    }
+  ],
+  "require": {
+    "cronixweb/streamline-sdk": "*"
+  }
+}
+```
+
+Then regenerate the autoloader:
+
+```bash
+composer dump-autoload
+```
+
+---
 
 ## Configuration
-This SDK requires Streamline API credentials: `token_key` and `token_secret`.
 
-Recommended: store them in environment variables and your Laravel config, e.g.:
-- `.env`:
+The SDK requires your Streamline API credentials: `token_key` and `token_secret`.
+
+**1. Environment variables**
+
 ```bash
-  STREAMLINE_TOKEN_KEY=your_token_key
-  STREAMLINE_TOKEN_SECRET=your_token_secret
+# .env
+STREAMLINE_TOKEN_KEY=your_token_key
+STREAMLINE_TOKEN_SECRET=your_token_secret
 ```
 
-- `config/services.php`:
+**2. Service configuration**
+
 ```php
-  'streamline' => [
-      'token_key' => env('STREAMLINE_TOKEN_KEY'),
-      'token_secret' => env('STREAMLINE_TOKEN_SECRET'),
-  ],
+// config/services.php
+return [
+    // ...
+    'streamline' => [
+        'token_key'    => env('STREAMLINE_TOKEN_KEY'),
+        'token_secret' => env('STREAMLINE_TOKEN_SECRET'),
+    ],
+];
 ```
+
+You can override this with your own config file or secrets manager if needed.
+
+---
 
 ## Quick Start
-Example in a Laravel controller or service class:
+
+In a Laravel controller, job, or service class:
+
 ```php
 use Cronixweb\Streamline\Streamline;
 
-$apiKey = config('services.streamline.token_key');
+$apiKey    = config('services.streamline.token_key');
 $apiSecret = config('services.streamline.token_secret');
 
 $streamline = Streamline::api($apiKey, $apiSecret);
@@ -102,203 +222,349 @@ $streamline = Streamline::api($apiKey, $apiSecret);
 // Fetch first page of properties
 $properties = $streamline->properties()->all();
 
-// Get one property by unit_id
+// Fetch a single property by unit_id
 $property = $streamline->properties()->find(12345);
 ```
 
+From here you can traverse into scoped clients (amenities, gallery images, etc.) or call dedicated top-level clients.
+
+---
+
 ## Usage
-Below are examples for each available client. All examples assume you already instantiated `Streamline` as shown in Quick Start.
 
-Important: Unless otherwise noted, date inputs use the format MM/DD/YYYY.
+> Unless otherwise noted, **dates are in `MM/DD/YYYY` format** as expected by Streamline.
 
+All examples below assume you’ve already instantiated `Streamline` as shown in [Quick Start](#quick-start).
 
 ### Properties
-- List properties:
-  `$properties = $streamline->properties()->all();`
 
-- Get one property by unit_id:
-  `$property = $streamline->properties()->find(12345);`
+List properties:
 
-- Traverse to related clients for a specific property (scoped helpers):
-  ```php
-  $propClient = $streamline->properties();
-  $amenitiesClient = $propClient->amenities(12345);      // AmenitiesClient
-  $galleryClient   = $propClient->galleryImages(12345);  // GalleryImagesClient
-  $reviewsClient   = $propClient->reviews(12345);        // ReviewsClient
-  $ratesClient     = $propClient->propertyRates(12345);  // PropertyRatesClient
-  ```
+```php
+$properties = $streamline->properties()->all();
+```
 
+Get a single property by `unit_id`:
+
+```php
+$property = $streamline->properties()->find(12345);
+```
+
+Traverse to related, property-scoped clients:
+
+```php
+$propClient    = $streamline->properties();
+$amenities     = $propClient->amenities(12345)->all();      // AmenitiesClient
+$galleryImages = $propClient->galleryImages(12345)->all();  // GalleryImagesClient
+$reviews       = $propClient->reviews(12345)->all();        // ReviewsClient
+$rates         = $propClient->propertyRates(12345)->all();  // PropertyRatesClient
+```
+
+---
 
 ### Amenities
-- Get amenities for a unit:
+
+Get amenities for a unit:
+
 ```php
-  $amenities = $streamline->properties()->amenities(12345)->all();
-  // or using the direct method
-  // $amenities = $streamline->amenities()->getPropertyAmenities(12345);
+$amenities = $streamline
+    ->properties()
+    ->amenities(12345)
+    ->all();
+
+// Or via a dedicated client:
+// $amenities = $streamline->amenities()->getPropertyAmenities(12345);
 ```
+
+---
 
 ### Gallery Images
-- Get gallery images for a unit:
-```php
-  $images = $streamline->properties()->galleryImages(12345)->all();
-  // or
-  // $images = $streamline->galleryImages()->getPropertyGalleryImages(12345);
-```
-Each item is parsed into a GalleryImage model-like array/object, depending on the specific parser; the fields reflect the API response.
 
+Get gallery images for a unit:
+
+```php
+$images = $streamline
+    ->properties()
+    ->galleryImages(12345)
+    ->all();
+
+// Or via a dedicated client:
+// $images = $streamline->galleryImages()->getPropertyGalleryImages(12345);
+```
+
+Each item is parsed into a gallery-image model (array/object), mirroring the underlying API fields.
+
+---
 
 ### Reviews
-- Get guest reviews (optionally filter by housekeeper_id, unit_id, return_all):
+
+Get guest reviews, optionally scoped and filtered:
+
 ```php
-  use Cronixweb\Streamline\Utils\ReviewsClient; // if you need types
+use Cronixweb\Streamline\Utils\ReviewsClient; // for type hints, if desired
 
-  // Scoped to a unit via properties client
-  $reviews = $streamline->properties()->reviews(12345)->all();
+// Scoped to a unit via properties client
+$reviews = $streamline->properties()->reviews(12345)->all();
 
-  // Or use method with filters
-  $reviews = $streamline->reviews()->getGuestReviews(
-      housekeeperId: null, // e.g. 789
-      unitId: 12345,
-      returnAll: true
-  );
+// Or using the method with filters
+$reviews = $streamline->reviews()->getGuestReviews(
+    housekeeperId: null,   // e.g. 789
+    unitId:       12345,
+    returnAll:    true
+);
 ```
 
-### Booked/Blocked Days
-- Fetch blocked days for one unit:
-```php
-  $blocked = $streamline->bookedDates()->getBlockedDaysForUnit(
-      unitId: 12345,
-      startdate: '01/01/2025', // optional
-      enddate: '01/31/2025',   // optional
-      displayB2BBlocks: true,  // optional
-      allowInvalid: false,     // optional
-      owningId: null           // optional, only for single unit
-  );
-```
-- Fetch blocked days for multiple units (enddate required when multiple ids):
-```php
-  $blocked = $streamline->bookedDates()->getBlockedDaysForUnit(
-      unitId: [12345, 67890],
-      startdate: '01/01/2025',
-      enddate: '01/31/2025',
-      displayB2BBlocks: true,
-      allowInvalid: false
-  );
-```
-Returns an array of BookedDate items parsed from the API.
+---
 
+### Booked / Blocked Days
+
+Fetch blocked days for **one** unit:
+
+```php
+$blocked = $streamline->bookedDates()->getBlockedDaysForUnit(
+    unitId:           12345,
+    startdate:        '01/01/2025', // optional
+    enddate:          '01/31/2025', // optional
+    displayB2BBlocks: true,         // optional
+    allowInvalid:     false,        // optional
+    owningId:         null          // optional, single unit only
+);
+```
+
+Fetch blocked days for **multiple** units (requires `enddate`):
+
+```php
+$blocked = $streamline->bookedDates()->getBlockedDaysForUnit(
+    unitId:           [12345, 67890],
+    startdate:        '01/01/2025',
+    enddate:          '01/31/2025',
+    displayB2BBlocks: true,
+    allowInvalid:     false
+);
+```
+
+Returns an array of booked/blocked date items parsed from the API.
+
+---
 
 ### Property Rates
-There are two ways to fetch rates:
 
-1) Using the high-level all() which validates inputs and maps options:
+There are two primary ways to fetch rates.
+
+#### 1. High-level `all()` helper
+
+The `all()` method accepts an options array and handles validation + mapping:
+
 ```php
-  $rates = $streamline->propertyRates()->all([
-      'unit_id' => 12345,
-      'startdate' => '01/01/2025',
-      'enddate' => '01/31/2025',
-      // Optional flags:
-      'use_room_type_logic' => true,
-      'dailyChangeOver' => false,
-      'use_homeaway_max_days_notice' => false,
-      // Provide either of the following:
-      // 'rate_type_ids' => [1, 2, 3],
-      // or nested form
-      // 'rate_types' => ['id' => [1, 2, 3]],
-      'show_los_if_enabled' => true,
-      'max_los_stay' => 14, // requires show_los_if_enabled = true
-      'use_adv_logic_if_defined' => false,
-  ]);
+$rates = $streamline->propertyRates()->all([
+    'unit_id'                      => 12345,
+    'startdate'                    => '01/01/2025',
+    'enddate'                      => '01/31/2025',
+
+    // Optional flags:
+    'use_room_type_logic'          => true,
+    'dailyChangeOver'              => false,
+    'use_homeaway_max_days_notice' => false,
+
+    // Provide either of the following (not both):
+    // 'rate_type_ids' => [1, 2, 3],
+    // or nested:
+    // 'rate_types'    => ['id' => [1, 2, 3]],
+
+    'show_los_if_enabled'          => true,
+    'max_los_stay'                 => 14,   // requires show_los_if_enabled = true
+    'use_adv_logic_if_defined'     => false,
+]);
 ```
 
-2) Using the explicit method with typed parameters:
+#### 2. Explicit typed method
+
 ```php
-  $rates = $streamline->propertyRates()->getPropertyRates(
-      unitId: 12345,
-      startdate: '01/01/2025',
-      enddate: '01/31/2025',
-      useRoomTypeLogic: null,
-      dailyChangeOver: null,
-      useHomeawayMaxDaysNotice: null,
-      rateTypeIds: [1, 2],
-      showLosIfEnabled: true,
-      maxLosStay: 14,
-      useAdvLogicIfDefined: null
-  );
+$rates = $streamline->propertyRates()->getPropertyRates(
+    unitId:                   12345,
+    startdate:                '01/01/2025',
+    enddate:                  '01/31/2025',
+    useRoomTypeLogic:         null,
+    dailyChangeOver:          null,
+    useHomeawayMaxDaysNotice: null,
+    rateTypeIds:              [1, 2],
+    showLosIfEnabled:         true,
+    maxLosStay:               14,
+    useAdvLogicIfDefined:     null
+);
 ```
-Returned items are parsed into PropertyRate models.
 
-Validation rules enforced by the client:
-- `unit_id` must be a positive integer
-- `startdate` and enddate must be in `MM/DD/YYYY` format
-- `dailyChangeOver` and `use_homeaway_max_days_notice` cannot be used together
-- If `max_los_stay` is set, it must be 1–180 and requires `show_los_if_enabled=true`
+**Validation rules enforced by the client:**
 
+- `unit_id` must be a positive integer.
+- `startdate` and `enddate` must be in `MM/DD/YYYY` format.
+- `dailyChangeOver` and `use_homeaway_max_days_notice` cannot be used together.
+- If `max_los_stay` is set:
+  - Must be between `1` and `180`.
+  - Requires `show_los_if_enabled = true`.
+
+Returned items are parsed into `PropertyRate` model structures.
+
+---
 
 ### Token Renewal
-- You can refresh/rotate your token pair via:
+
+Refresh/rotate your token pair:
+
 ```php
-  $new = $streamline->refreshToken();
-  // returns: ['apikey' => '...', 'apiSecret' => '...']
-  // The Streamline instance automatically updates its internal client.
-  ```
+$new = $streamline->refreshToken();
 
-Persist the new credentials in your app (e.g., save to database or update env variables) if needed.
+// Example response:
+// [
+//     'apikey'    => '...',
+//     'apiSecret' => '...',
+// ]
+```
 
+The `Streamline` instance automatically updates its internal client with the new credentials.  
+If you persist credentials externally (DB, secrets store, etc.), make sure to store the new values.
+
+---
 
 ## Error Handling
-Most client methods may throw:
-- `Cronixweb\Streamline\Exceptions\StreamlineApiException` when the API returns an error or the response is malformed.
-- `Illuminate\Http\Client\ConnectionException` for transport-level issues.
-- `InvalidArgumentException` when you pass invalid inputs (e.g., bad dates, missing unit_id, etc.).
 
-Recommended handling pattern:
+Most client methods may throw:
+
+- `Cronixweb\Streamline\Exceptions\StreamlineApiException`
+  - When the API returns an error or an unexpected/malformed payload.
+- `Illuminate\Http\Client\ConnectionException`
+  - For network/transport-level issues.
+- `InvalidArgumentException`
+  - When you pass invalid inputs (e.g., bad dates, missing `unit_id`, invalid flags).
+
+Recommended pattern:
 
 ```php
+use Cronixweb\Streamline\Exceptions\StreamlineApiException;
+use Illuminate\Http\Client\ConnectionException;
+
 try {
-    $rates = $streamline->propertyRates()->getPropertyRates(12345, '01/01/2025', '01/31/2025');
-} catch (\Cronixweb\Streamline\Exceptions\StreamlineApiException $e) {
-    // Handle API-level error
-} catch (\Illuminate\Http\Client\ConnectionException $e) {
-    // Handle network/transport error
+    $rates = $streamline
+        ->propertyRates()
+        ->getPropertyRates(12345, '01/01/2025', '01/31/2025');
+} catch (StreamlineApiException $e) {
+    // Handle API-level error (log, alert, transform to domain exception, etc.)
+} catch (ConnectionException $e) {
+    // Handle network/transport errors (timeouts, DNS issues, etc.)
 } catch (\InvalidArgumentException $e) {
-    // Handle input validation error
+    // Handle invalid input before hitting the API
 }
 ```
 
-## Date Formats and Common Parameters
-- Dates are expected as strings in MM/DD/YYYY; the SDK performs basic validation where relevant.
-- Several boolean flags are sent to the API as 1/0 per Streamline conventions; the SDK converts true/false accordingly.
-- Some endpoints accept multiple unit_ids; the SDK handles array to comma-separated string conversion as required.
+---
 
+## Date Formats &amp; Common Parameters
 
-## FAQ and Notes
-- Is this Laravel-only?
-  - The SDK uses `Illuminate\Support\Facades\Http`. In practice, this means it’s best used inside a Laravel application where the HTTP client and facades are bootstrapped. Using it in a plain PHP project would require additional bootstrapping of the container and facades.
+- **Dates**
+  - Always `MM/DD/YYYY` strings.
+  - The SDK does basic validation where appropriate.
+- **Boolean flags**
+  - Sent as `1`/`0` integers per Streamline conventions.
+- **Multiple IDs**
+  - Some endpoints accept multiple `unit_id`s.
+  - Arrays are automatically translated to comma-separated strings.
 
-- What about pagination?
-  - If Streamline endpoints support pagination, you can pass the appropriate params through the `all($body)` methods. This SDK does not currently abstract pagination.
+---
 
-- Why do some responses flatten or wrap data differently?
-  - The Streamline API sometimes returns either a single object or an array depending on results. The SDK normalizes common cases to consistent lists for convenience.
+## FAQ &amp; Notes
 
-- Namespace note
-  - Code uses `Cronixweb\Streamline\...` namespaces. Ensure your autoloader maps that namespace to the `src/` directory when consuming this package.
+**Is this Laravel-only?**
 
+- The SDK uses `Illuminate\Support\Facades\Http`.  
+  It’s designed with Laravel in mind, but any framework/bootstrap that provides the necessary Illuminate components can work.
+
+**What about pagination?**
+
+- If a Streamline endpoint supports pagination, pass the pagination parameters through the relevant `all($body)` or method calls.
+- This SDK doesn’t currently abstract pagination; you control page size and offsets directly.
+
+**Why does the SDK sometimes flatten or wrap data differently from the raw API?**
+
+- The Streamline API sometimes returns:
+  - A single object for one result, or
+  - An array for multiple.
+- The SDK normalizes common cases to consistent lists/collections to simplify your application code.
+
+**Namespace reminder**
+
+- All code is under `Cronixweb\Streamline\...`.  
+  Ensure your autoloader maps that namespace to `src/` (or equivalent) when consuming the package.
+
+---
+
+## Cronix LLC · Services &amp; Support
+
+This SDK is built and maintained by **[Cronix LLC](https://cronixweb.com)** — a full-service digital marketing and eCommerce development agency specializing in **custom eCommerce websites, apps, and integrations**.
+
+If you’re using **[Streamline Vacation Rental Software](https://www.streamlinevrs.com)** for:
+
+- Vacation rentals
+- Travel &amp; hospitality
+- Property management platforms
+- Custom B2B booking portals
+
+…Cronix can help you:
+
+- Architect Streamline-backed Laravel or headless storefronts
+- Build performance-optimized APIs and dashboards
+- Design beautiful, conversion-oriented frontends
+- Maintain and evolve your integration over time
+
+📞 **Let’s talk about your project**
+
+- Website: https://cronixweb.com  
+- Contact: https://cronixweb.com/contact-us  
+- Request a quote: https://cronixweb.com/request-a-quote  
+- Email: `sales@cronixweb.com`
+
+> Ignite your ideas. Let’s chat and turn them into reality.
+
+---
 
 ## Contributing
-- Issues and PRs are welcome. Please describe the problem clearly and include reproducible examples when possible.
 
+Contributions are welcome!
+
+1. Fork the repository
+2. Create your feature branch: `git checkout -b feature/my-awesome-feature`
+3. Commit your changes: `git commit -m "Add my awesome feature"`
+4. Push the branch: `git push origin feature/my-awesome-feature`
+5. Open a Pull Request describing:
+   - The problem
+   - Your changes
+   - Any breaking impacts or migration notes
+
+Please include reproducible examples or failing tests whenever possible.
+
+---
 
 ## License
-- MIT (or the license specified for this repository).
 
+This SDK is released under the **MIT License**.  
+See the `LICENSE` file for full details.
 
-## Resources and Bibliography
-- Streamline VRS API JSON Docs: https://partner.streamlinevrs.com/apidocs/api-group
-- Streamline VRS general developer portal or documentation as provided by Streamline.
-- Laravel HTTP Client (Illuminate 12.x): https://laravel.com/docs/12.x/http-client
-- PSR-4 Autoloading (Composer): https://getcomposer.org/doc/04-schema.md#psr-4
-- PHP Manual: https://www.php.net/manual/en/
+---
 
-Last updated: 2025-10-30
+## Resources &amp; Bibliography
+
+- Streamline VRS API JSON Docs:  
+  https://partner.streamlinevrs.com/apidocs/api-group
+- Streamline VRS JSON API endpoint:  
+  https://web.streamlinevrs.com/api/json
+- Streamline VRS website:  
+  https://www.streamlinevrs.com
+- Laravel HTTP Client (Illuminate 12.x):  
+  https://laravel.com/docs/12.x/http-client
+- PSR-4 Autoloading (Composer):  
+  https://getcomposer.org/doc/04-schema.md#psr-4
+- PHP Manual:  
+  https://www.php.net/manual/en/
+
+---
+
+<sub>Last updated: 2025-11-14</sub>
